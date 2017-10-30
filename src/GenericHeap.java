@@ -1,8 +1,48 @@
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+
+class Entry<K extends Comparable<K>, V> implements Comparable<Entry<K,V>> {
+    private K key;
+    private V value;
+
+    public Entry(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public int compareTo(Entry<K, V> other) {
+        return this.getKey().compareTo(other.getKey());
+    }
+
+    public V getValue() {
+        return value;
+    }
+
+    public K getKey() {
+        return key;
+    }
+}
+
+
 /**
  * Lab 4: Generics <br />
  * The {@code GenericHeap} class
  */
-public class GenericHeap<K extends Comparable<K>, V> {
+public class GenericHeap<K extends Comparable<K>, V> extends PriorityQueue<Entry<K,V>>{
+
+    /**
+     * GenericHeap constructor
+     */
+    public GenericHeap(){
+        super(new Comparator<>() {
+            @Override
+            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+                return e1.getKey().compareTo(e2.getKey());
+            }
+        });
+    }
 
     /**
      * Insert an new element to the heap
@@ -11,7 +51,8 @@ public class GenericHeap<K extends Comparable<K>, V> {
      */
     public void insert(K key, V value) {
         // TODO: Lab 4 Part 2-1 -- GenericHeap, add new element
-        
+        this.add(new Entry<>(key, value));
+
     }
 
     /**
@@ -21,8 +62,19 @@ public class GenericHeap<K extends Comparable<K>, V> {
      */
     public static <E extends Comparable<E>> E[] heapSort(E[] array) {
         // TODO: Lab 4 Part 2-4 -- GenericHeap, return a sorted array
-        
-        return null;
+
+        GenericHeap<E, E> heap = new GenericHeap<>();
+
+        // insert each item into the array
+        for (E item : array){
+            heap.insert(item, item);
+        }
+
+        for (int i=0; i<array.length; i++){
+            Entry<E, E> entry = heap.poll();
+            array[i] = entry.getKey();
+        }
+        return array;
     }
 
     /**
