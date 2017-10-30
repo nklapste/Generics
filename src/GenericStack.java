@@ -1,7 +1,5 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.Vector;
 
 
 // TODO talk to TA about my implementation
@@ -10,14 +8,12 @@ import java.util.Stack;
  * Lab 4: Generics <br />
  * The {@code GenericStack} class
  */
-public class GenericStack<T> {
-    private Stack<T> stack;
-
+public class GenericStack<T> extends Vector<T> {
     /**
      * GenericStack constructor
      */
     public GenericStack() {
-        this.stack = new Stack<>();
+        super(0, 1);
     }
 
     /**
@@ -27,15 +23,14 @@ public class GenericStack<T> {
      */
     public T peek() {
         // TODO: Lab 4 Part 1-1 -- GenericStack, finish the peek method
-        return this.stack.peek();
-//        // if the stack is empty do nothing
-//        if(this.stack.isEmpty()){
-//            return null;
-//            // query first element of stack
-//        } else {
-//            //TODO query first element of stack
-//            return this.stack.get(this.stack.size()-1);
-//        }
+        // if the stack is empty do nothing
+        if (this.isEmpty()) {
+            return null;
+            // query first element of stack
+        } else {
+            //TODO query first element of stack
+            return this.get(this.size() - 1);
+        }
     }
 
     /**
@@ -45,7 +40,7 @@ public class GenericStack<T> {
      */
     public void push(T value) {
         // TODO: Lab 4 Part 1-2 -- GenericStack, finish the push method
-        this.stack.push(value);
+        this.add(value);
     }
 
     /**
@@ -55,13 +50,12 @@ public class GenericStack<T> {
      */
     public T pop() {
         // TODO: Lab 4 Part 1-3 -- GenericStack, finish the pop method
-        return this.stack.pop();
-//            // if the stack is empty do nothing
-//        if(this.stack.isEmpty()){
-//            return null;
-//        } else {
-//            return this.stack.remove(this.stack.size()-1);
-//        }
+        // if the stack is empty do nothing
+        if (this.isEmpty()) {
+            return null;
+        } else {
+            return this.remove(this.size() - 1);
+        }
     }
 
     /**
@@ -71,7 +65,11 @@ public class GenericStack<T> {
      */
     public int size() {
         // TODO: Lab 4 Part 1-4 -- GenericStack, finish the size method
-        return this.stack.size();
+        int count = 0;
+        for (T element : this) {
+            count++;
+        }
+        return count;
     }
 
     /**
@@ -81,7 +79,7 @@ public class GenericStack<T> {
      */
     public boolean isEmpty() {
         // TODO: Lab 4 Part 1-5 -- GenericStack, finish the isEmpty method
-        return this.stack.size() == 0;
+        return this.size() == 0;
     }
 
     /**
@@ -92,14 +90,12 @@ public class GenericStack<T> {
      */
     public static Double calcPostfixExpression(String exp) {
         // TODO: Lab 4 Part 1-6 -- GenericStack, calculate postfix expression
-        // parse exp string in to a list of expression symbols
-        List<String> expList = new ArrayList<String>(Arrays.asList(exp.split(" ")));
-
-        // init generic stack to be the calcStack to operate on
+        // init GenericStack of Doubles to be the calcStack to operate on
         GenericStack<Double> calcStack = new GenericStack<Double>();
 
+        // parse exp string in to a list of expression symbols and
         // go through expressions and operate on calcStack accordingly
-        for (String expSym : expList) {
+        for (String expSym : Arrays.asList(exp.split(" "))) {
             if (expSym.matches("-?\\d+(\\.\\d+)?")) {
                 calcStack.push(Double.parseDouble(expSym));
             } else if (expSym.matches("\\+|\\-|\\*|\\/|\\^")) {
@@ -111,7 +107,6 @@ public class GenericStack<T> {
 
         // pop result off
         return calcStack.pop();
-
     }
 
     /**
