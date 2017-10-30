@@ -197,15 +197,52 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
     }
 
     /**
+     * Check the node ensuring all colors are correctly set after a deletion
+     * @param node
+     */
+    public void  fixDelColor(Node node){
+
+    }
+
+    /**
+     * Recursively search the tree to find if the value is contained and remove it
+     *
+     * @param Key {@code int} the Key to be found
+     * @return {@code boolean} If contains, return {@code true}, otherwise return {@code false}
+     */
+    private boolean removeRecursively(Node node, K key) {
+        // end of a branch pull out
+        if (node == null || node.key == null)
+            return false;
+
+        // found the value pull out
+        if (node.key.equals(key)) {
+            return true;
+        } else {
+            // recursively check the left branches then
+            // if not found check the right branches
+            if (checkRecursively(node.lChild, key)) {
+                return true;
+            } else {
+                return checkRecursively(node.rChild, key);
+            }
+        }
+    }
+
+    /**
      * Remove an element from the tree
      * @param key       {@code K} the key of the element
      * @return          {@code V} the value of the removed element
      */
     public V remove(K key) {
         // TODO: Lab 4 Part 3-3 -- remove an element from the tree
-        
+
+        //validate that key is present in tree
+
+        //remove element recursively
         return null;
     }
+
 
     /**
      * Get the size of the tree
@@ -268,11 +305,11 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         System.out.println("Finding key:");
         System.out.println(keys[3]);
         System.out.println(rbt.find(keys[3]));
-
+        assert rbt.find(keys[3]);
         System.out.println("Finding key:");
         System.out.println(keys[9]);
-        System.out.println(rbt.find(keys[9]));
-        System.out.println(rbt.find(-3));
+        assert rbt.find(keys[9]);
+        assert !rbt.find(-3);
 
         for (int i = 0; i < 10; i++) {
             System.out.println(String.format("%2d Delete: %3d(%s)", i+1, keys[i], rbt.remove(keys[i])));
