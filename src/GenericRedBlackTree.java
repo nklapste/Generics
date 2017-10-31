@@ -164,9 +164,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param value     {@code V} the value of the new element
      */
     public void insert(K key, V value) {
-        // TODO: Lab 4 Part 3-2 -- insert an element into the tree
+        // Lab 4 Part 3-2 -- insert an element into the tree
         Node curNode = root;
-        //TODO test
         while (curNode != null && curNode.key != null) {
             // go left if less than current node
             if (key.compareTo(curNode.key)==-1) {
@@ -308,28 +307,111 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         }
     }
 
+
+
+    public void swap(Node n1, Node n2){
+//        Node tParent = n1.parent;
+//        Node tLChild = n1.lChild;
+//        Node tRChild = n1.rChild;
+//        n1.rChild = null;
+//        n2.parent =tParent;
+//        n2.lChild = tLChild;
+//        n1.parent = n2;
+//        n2.rChild = n1;
+          K keyT = n1.key;
+          V valueT = n1.value;
+
+          n1.key = n2.key;
+          n1.value = n2.value;
+
+          n2.key = keyT;
+          n2.value = valueT;
+          n2 = n1;
+
+//        n1.rChild = n2.rChild;
+//        n2.rChild = n1;
+//        n2.lChild = tLChild;
+//        n2.parent = tParent;
+//        n1 = n2;
+    }
+
     /**
      * Follow Red Black tree behaviour in removing nodes
      * @param node
      */
     public V removeNode(Node node){
-        Node parent = null;
-        boolean leftChild = false;
-        //get parent of node beforehand
-        if (node.parent != null && node != root){
-            parent = node.parent;
-            leftChild = node.isLeftChild();
-
-        }
+//        Node parent = null;
+//        boolean leftChild = false;
+//        //get parent of node beforehand
+//        if (node.parent != null && node != root){
+//            parent = node.parent;
+//            leftChild = node.isLeftChild();
+//
+//        }
+//
+//        if ((node.lChild != null && node.lChild.key != null) && (node.rChild != null && node.rChild.key != null)) {
+//            Node larger = getLeftMostNode(node.rChild);
+//
+//            // larger needs one null child
+//            assert (larger.lChild.key == null) || (larger.rChild.key == null);
+//
+//            //swap node with larger
+//            node = larger;
+//        }
+//
+//        Node child;
+//        // set nodes new NIL child: set child to NIL's sibling (child may also be nill)
+//        if(node.lChild != null && node.lChild.key != null){
+//            child = node.lChild;
+//        } else {
+//            child = node.rChild;
+//        }
+//
+//        // if node is is not root
+//        if (parent != null && node != root){
+//            //link child to parent
+////            child.parent = node.parent;
+//            child.parent = parent;
+//
+////            if(node.isLeftChild()){ //TODO check
+////                node.parent.lChild = child;
+////            } else {
+////                node.parent.rChild = child;
+////            }
+//            if(leftChild){ //TODO check
+//                parent.lChild = child;
+//            } else {
+//                parent.rChild = child;
+//            }
+//            // else set child to root
+//        } else if(child == null || child.key == null){
+//            root = null; //TODO IS THIS THE PROPER WAY?
+//        } else {
+//            root = child;
+//        }
+//
+//        // if nodes color is black
+//        if (node.color == Node.BLACK){
+//            // if child's color is red  set child's color to black
+//            if (child.color == Node.RED){
+//                child.color = Node.BLACK;
+//            } else {
+//                // fix child's color
+//                fixDelColor(child);
+//            }
+//        }
+//        return node.value;
 
         if ((node.lChild != null && node.lChild.key != null) && (node.rChild != null && node.rChild.key != null)) {
             Node larger = getLeftMostNode(node.rChild);
-
             // larger needs one null child
             assert (larger.lChild.key == null) || (larger.rChild.key == null);
 
             //swap node with larger
+            swap(larger, node);
             node = larger;
+
+
         }
 
         Node child;
@@ -341,20 +423,20 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         }
 
         // if node is is not root
-        if (parent != null && node != root){
+        if (node.parent != null && node != root){
             //link child to parent
 //            child.parent = node.parent;
-            child.parent = parent;
+            child.parent = node.parent;
 
 //            if(node.isLeftChild()){ //TODO check
 //                node.parent.lChild = child;
 //            } else {
 //                node.parent.rChild = child;
 //            }
-            if(leftChild){ //TODO check
-                parent.lChild = child;
+            if(node.isLeftChild()){ //TODO check
+                node.parent.lChild = child;
             } else {
-                parent.rChild = child;
+                node.parent.rChild = child;
             }
             // else set child to root
         } else if(child == null || child.key == null){
@@ -373,6 +455,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
                 fixDelColor(child);
             }
         }
+
         return node.value;
     }
 
