@@ -3,9 +3,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GenericRedBlackTreeTest {
     private GenericRedBlackTree<Integer, String> rbt;
-    private int TEST_CASE_SIZE = 10;
+    private int TEST_CASE_SIZE = 5;
     private int[] keys = new int[TEST_CASE_SIZE];
 
     @Before public void setUp() {
@@ -58,15 +61,21 @@ public class GenericRedBlackTreeTest {
     }
 
     @Test public void test_removeAll(){
+        // ensure that we don't repeat deleting keys would raise an error!
+        List<Integer> deletedKeys = new ArrayList<>();
         for (int i = 0; i < TEST_CASE_SIZE; i++) {
-            System.out.println(String.format("Removing key %d", keys[i]));
-            System.out.println(String.format("Before: %s", rbt));
+            if (!deletedKeys.contains(keys[i])){
+                System.out.println(String.format("Removing key %d", keys[i]));
+                System.out.println(String.format("Before: %s", rbt));
 
-            // check if proper value has been removed
-            assertEquals(keys[i], convertValue(rbt.remove(keys[i])));
+                // check if proper value has been removed
+                assertEquals(keys[i], convertValue(rbt.remove(keys[i])));
 
-            System.out.println(String.format("After: %s", rbt));
-            System.out.println();
+                System.out.println(String.format("After: %s", rbt));
+                System.out.println();
+
+                deletedKeys.add(keys[i]);
+            }
         }
 
         // check if rbt is empty

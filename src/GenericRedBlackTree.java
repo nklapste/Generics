@@ -79,7 +79,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         Node grandParent = parent.parent;
 
         if (grandParent == null) {
-            root = node;
+            root = node; //TODO assigned root to null here
         } else {
             if (parent.isLeftChild())
                 grandParent.lChild = node;
@@ -284,16 +284,17 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         if (node.isLeftChild()){
             if (sibling.rChild != null && sibling.rChild.key != null){
                 sibling.rChild.color = Node.BLACK;
+                // todo rotating left on a nill node
+                rotateTree(sibling, ROTATE_LEFT); //TODO BLEW UP TRE TO NULL HERE //todo moved here for fix
             }
-            rotateTree(sibling, ROTATE_LEFT); //TODO BLEW UP TRE TO NULL HERE
         }
 
         if (node.isRightChild()){
             if (sibling.lChild != null && sibling.lChild.key != null){
                 sibling.lChild.color = Node.BLACK;
+                rotateTree(sibling, ROTATE_RIGHT); //todo moved here for fix
             }
 
-            rotateTree(sibling, ROTATE_RIGHT);
         }
 
     }
@@ -369,6 +370,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
                 child.color = Node.BLACK;
             } else {
                 // fix child's color
+                // TODO GOES IN TO FIX CHILD key 55
                  fixDelColor(child);
             }
         }
