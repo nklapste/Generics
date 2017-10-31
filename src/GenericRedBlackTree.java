@@ -223,7 +223,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             sibling.parent.color = Node.RED;
             sibling.color = Node.BLACK;
 
-            // TODO CHECK
             // rotate sibling L/R if node is L/R child
             if(node.isLeftChild()){
                 rotateTree(sibling, ROTATE_LEFT);
@@ -286,7 +285,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             if (sibling.rChild != null && sibling.rChild.key != null){
                 sibling.rChild.color = Node.BLACK;
             }
-            rotateTree(sibling, ROTATE_LEFT);
+            rotateTree(sibling, ROTATE_LEFT); //TODO BLEW UP TRE TO NULL HERE
         }
 
         if (node.isRightChild()){
@@ -310,14 +309,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 
     public void swap(Node n1, Node n2){
-//        Node tParent = n1.parent;
-//        Node tLChild = n1.lChild;
-//        Node tRChild = n1.rChild;
-//        n1.rChild = null;
-//        n2.parent =tParent;
-//        n2.lChild = tLChild;
-//        n1.parent = n2;
-//        n2.rChild = n1;
+
           K keyT = n1.key;
           V valueT = n1.value;
 
@@ -328,11 +320,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
           n2.value = valueT;
           n2 = n1;
 
-//        n1.rChild = n2.rChild;
-//        n2.rChild = n1;
-//        n2.lChild = tLChild;
-//        n2.parent = tParent;
-//        n1 = n2;
     }
 
     /**
@@ -340,68 +327,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param node
      */
     public V removeNode(Node node){
-//        Node parent = null;
-//        boolean leftChild = false;
-//        //get parent of node beforehand
-//        if (node.parent != null && node != root){
-//            parent = node.parent;
-//            leftChild = node.isLeftChild();
-//
-//        }
-//
-//        if ((node.lChild != null && node.lChild.key != null) && (node.rChild != null && node.rChild.key != null)) {
-//            Node larger = getLeftMostNode(node.rChild);
-//
-//            // larger needs one null child
-//            assert (larger.lChild.key == null) || (larger.rChild.key == null);
-//
-//            //swap node with larger
-//            node = larger;
-//        }
-//
-//        Node child;
-//        // set nodes new NIL child: set child to NIL's sibling (child may also be nill)
-//        if(node.lChild != null && node.lChild.key != null){
-//            child = node.lChild;
-//        } else {
-//            child = node.rChild;
-//        }
-//
-//        // if node is is not root
-//        if (parent != null && node != root){
-//            //link child to parent
-////            child.parent = node.parent;
-//            child.parent = parent;
-//
-////            if(node.isLeftChild()){ //TODO check
-////                node.parent.lChild = child;
-////            } else {
-////                node.parent.rChild = child;
-////            }
-//            if(leftChild){ //TODO check
-//                parent.lChild = child;
-//            } else {
-//                parent.rChild = child;
-//            }
-//            // else set child to root
-//        } else if(child == null || child.key == null){
-//            root = null; //TODO IS THIS THE PROPER WAY?
-//        } else {
-//            root = child;
-//        }
-//
-//        // if nodes color is black
-//        if (node.color == Node.BLACK){
-//            // if child's color is red  set child's color to black
-//            if (child.color == Node.RED){
-//                child.color = Node.BLACK;
-//            } else {
-//                // fix child's color
-//                fixDelColor(child);
-//            }
-//        }
-//        return node.value;
-
         if ((node.lChild != null && node.lChild.key != null) && (node.rChild != null && node.rChild.key != null)) {
             Node larger = getLeftMostNode(node.rChild);
             // larger needs one null child
@@ -410,8 +335,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             //swap node with larger
             swap(larger, node);
             node = larger;
-
-
         }
 
         Node child;
@@ -425,22 +348,16 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         // if node is is not root
         if (node.parent != null && node != root){
             //link child to parent
-//            child.parent = node.parent;
             child.parent = node.parent;
 
-//            if(node.isLeftChild()){ //TODO check
-//                node.parent.lChild = child;
-//            } else {
-//                node.parent.rChild = child;
-//            }
-            if(node.isLeftChild()){ //TODO check
+            if(node.isLeftChild()){
                 node.parent.lChild = child;
             } else {
                 node.parent.rChild = child;
             }
             // else set child to root
         } else if(child == null || child.key == null){
-            root = null; //TODO IS THIS THE PROPER WAY?
+            root = null;
         } else {
             root = child;
         }
@@ -452,10 +369,9 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
                 child.color = Node.BLACK;
             } else {
                 // fix child's color
-                fixDelColor(child);
+                 fixDelColor(child);
             }
         }
-
         return node.value;
     }
 
@@ -473,7 +389,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             //remove element
             return removeNode(node);
         } else {
-            throw new InvalidKeyException();
+            return null;
         }
     }
 
@@ -530,8 +446,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 
         GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-        int TEST_CASE_SIZE = 3;
-        int[] keys = new int[TEST_CASE_SIZE];
+
+//        int TEST_CASE_SIZE = 3;
 //        for (int i = 0; i < TEST_CASE_SIZE; i++) {
 //            keys[i] = (int) (Math.random() * 200);
 //            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
@@ -539,7 +455,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 //        } // for (int i = 0; i < 10; i++)
 
         // TODO SPECIFIC FAIL TEST
-        keys = new int[]{74, 15, 100};
+//        int TEST_CASE_SIZE = 3;
+//        int[]keys = new int[]{74, 15, 100};
+        int TEST_CASE_SIZE = 4;
+        int[] keys = new int[]{77, 2, 74, 55};
         for (int i = 0; i < TEST_CASE_SIZE; i++) {
             System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
             rbt.insert(keys[i], "\"" + keys[i] + "\"");
