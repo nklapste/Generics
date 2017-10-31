@@ -1,3 +1,5 @@
+import javax.management.openmbean.InvalidKeyException;
+
 /**
  * Lab 4: Generics <br />
  * The {@code GenericRedBlackTree} class <br />
@@ -20,32 +22,40 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
     private Node root = null;
 
     /**
+     * @return
+     */
+    public Node getRoot(){
+        return root;
+    }
+
+    /**
      * Size of the tree
      */
     private int size = 0;
 
     //TODO MAKE RETURN VALUE
     /**
-     * Recursively search the tree to find if the value is contained
+     * Recursively search the tree to find if the node is contained
      *
-     * @param Key {@code int} the Key to be found
-     * @return {@code boolean} If contains, return {@code true}, otherwise return {@code false}
+     * @param key {@code int} the Key to be found
+     * @return {@code Node}
      */
-    private boolean checkRecursively(Node node, K key) {
+    private Node getNode(Node node, K key) {
         // end of a branch pull out
         if (node == null || node.key == null)
-            return false;
+            return null;
 
         // found the value pull out
         if (node.key.equals(key)) {
-            return true;
+            return node;
         } else {
             // recursively check the left branches then
             // if not found check the right branches
-            if (checkRecursively(node.lChild, key)) {
-                return true;
+            Node node_out = getNode(node.lChild, key);
+            if (node_out != null) {
+                return node_out;
             } else {
-                return checkRecursively(node.rChild, key);
+                return getNode(node.rChild, key);
             }
         }
     }
@@ -56,10 +66,14 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param key       {@code K} the key for searching
      * @return          {@code V} the value of the node, or {@code NULL} if not found
      */
-    public boolean find(K key) {
+    public V find(K key) {
         // TODO: Lab 4 Part 3-1 -- find an element from the tree
-
-        return checkRecursively(root, key);
+        Node node = getNode(root, key);
+        if (node == null){
+            return null;
+        } else {
+            return node.value;
+        }
     }
 
 
@@ -201,33 +215,161 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param node
      */
     public void  fixDelColor(Node node){
+        // case 1
+        if (node.parent == null){
+            node.color = Node.BLACK;
+            return;
+        }
 
+        //case 2
+        Node sibling;
+        if (node.isLeftChild()){
+            sibling = node.parent.rChild;
+        } else {
+            sibling = node.parent.lChild;
+        }
+        if (sibling.color == Node.RED){
+            sibling.parent.color = Node.RED;
+            sibling.color = Node.BLACK;
+
+            // TODO CHECK
+            // rotate sibling L/R if node is L/R child
+            if(node.isLeftChild()){
+                rotateTree(sibling, ROTATE_LEFT);
+            } else {
+                rotateTree(sibling, ROTATE_RIGHT);
+            }
+
+            // update sibling to nodes new sibling
+            if (node.isLeftChild()){
+                sibling = node.parent.rChild;
+            } else {
+                sibling =  node.parent.lChild;
+            }
+        }
+
+        if(sibling.key == null){
+            // case 3
+            if (node.parent.color == Node.BLACK) {
+                sibling.color = Node.RED;
+                fixDelColor(node.parent);
+            }
+
+            //case 4
+            if (node.parent.color == Node.RED) {
+                sibling.color = Node.RED;
+                node.parent.color = Node.BLACK;
+            }
+        } else {
+            // case 3
+            if (node.parent.color == Node.BLACK && sibling.color == Node.BLACK && sibling.lChild.color == Node.BLACK && sibling.rChild.color == Node.BLACK) {
+                sibling.color = Node.RED;
+                fixDelColor(node.parent);
+            }
+
+            //case 4
+            if (node.parent.color == Node.RED && sibling.color == Node.BLACK && sibling.lChild.color == Node.BLACK && sibling.rChild.color == Node.BLACK) {
+                sibling.color = Node.RED;
+                node.parent.color = Node.BLACK;
+            }
+        }
+
+        // case 5
+        if(sibling.color == Node.BLACK){
+            sibling.color = Node.RED;
+            if(node.isLeftChild() && sibling.lChild.color == Node.RED && sibling.rChild.color == Node.BLACK){
+                sibling.lChild.color = Node.BLACK;
+                rotateTree(sibling.lChild, ROTATE_RIGHT);
+            }
+            if(node.isRightChild() && sibling.lChild.color == Node.BLACK && sibling.rChild.color == Node.RED){
+                sibling.rChild.color = Node.BLACK;
+                rotateTree(sibling.rChild, ROTATE_LEFT);
+            }
+        }
+
+        // case 6
+        sibling.color = node.parent.color;
+        node.parent.color = Node.BLACK;
+
+        if (node.isLeftChild()){
+            if (sibling.rChild != null && sibling.rChild.key != null){
+                sibling.rChild.color = Node.BLACK;
+            }
+            rotateTree(sibling, ROTATE_LEFT);
+        }
+
+        if (node.isRightChild()){
+            if (sibling.lChild != null && sibling.lChild.key != null){
+                sibling.lChild.color = Node.BLACK;
+            }
+
+            rotateTree(sibling, ROTATE_RIGHT);
+        }
+
+    }
+
+    public Node getLeftMostNode(Node node){
+        if (node.lChild != null && node.lChild.key != null){
+            return getLeftMostNode(node.lChild);
+        } else {
+            return node;
+        }
     }
 
     /**
-     * Recursively search the tree to find if the value is contained and remove it
-     *
-     * @param Key {@code int} the Key to be found
-     * @return {@code boolean} If contains, return {@code true}, otherwise return {@code false}
+     * Follow Red Black tree behaviour in removing nodes
+     * @param node
      */
-    private boolean removeRecursively(Node node, K key) {
-        // end of a branch pull out
-        if (node == null || node.key == null)
-            return false;
+    public V removeNode(Node node){
 
-        // found the value pull out
-        if (node.key.equals(key)) {
-            return true;
+        if ((node.lChild != null && node.lChild.key != null) && (node.rChild != null && node.rChild.key != null)) {
+            Node larger = getLeftMostNode(node.rChild);
+
+            // larger needs one null child
+            assert (larger.lChild == null && larger.lChild.key == null) || (larger.rChild == null && larger.rChild.key == null);
+
+            //swap node with larger
+            node = larger;
+        }
+
+        Node child;
+        // set nodes new NIL child: set child to NIL's sibling (child may also be nill)
+        if(node.lChild != null && node.lChild.key != null){
+            child = node.lChild;
         } else {
-            // recursively check the left branches then
-            // if not found check the right branches
-            if (checkRecursively(node.lChild, key)) {
-                return true;
+            child = node.rChild;
+        }
+
+        // if node is is not root
+        if (node.parent != null){
+            //link child to parent
+            child.parent = node.parent;
+
+            if(node.isLeftChild()){ //TODO check
+                node.parent.lChild = child;
             } else {
-                return checkRecursively(node.rChild, key);
+                node.parent.rChild = child;
+            }
+            // else set child to root
+        } else if(child == null || child.key == null){
+            root = null;
+        } else {
+            root = child;
+        }
+
+        // if nodes color is black
+        if (node.color == Node.BLACK){
+            // if child's color is red  set child's color to black
+            if (child.color == Node.RED){
+                child.color = Node.BLACK;
+            } else {
+                // fix child's color
+                fixDelColor(child);
             }
         }
+        return node.value;
     }
+
 
     /**
      * Remove an element from the tree
@@ -238,9 +380,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         // TODO: Lab 4 Part 3-3 -- remove an element from the tree
 
         //validate that key is present in tree
-
-        //remove element recursively
-        return null;
+        Node node = getNode(root, key);
+        if(node != null){
+            //remove element
+            return removeNode(node);
+        } else {
+            throw new InvalidKeyException();
+        }
     }
 
 
@@ -289,8 +435,9 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      */
     public static void main(String[] args) {
         GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-        int[] keys = new int[10];
-        for (int i = 0; i < 10; i++) {
+        int TEST_CASE_SIZE = 3;
+        int[] keys = new int[TEST_CASE_SIZE];
+        for (int i = 0; i < TEST_CASE_SIZE; i++) {
             keys[i] = (int) (Math.random() * 200);
             System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
             rbt.insert(keys[i], "\"" + keys[i] + "\"");
@@ -300,22 +447,28 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         assert rbt.root.color == true;
         System.out.println(rbt.root);                   // This helps to figure out the tree structure
         System.out.println(rbt);
+
+        // test finding keys
         System.out.println("Testing find:");
+        for (int i = 0; i < TEST_CASE_SIZE; i++) {
+            System.out.print("Finding key: ");
+            System.out.print(keys[i]);
 
-        System.out.println("Finding key:");
-        System.out.println(keys[3]);
-        System.out.println(rbt.find(keys[3]));
-        assert rbt.find(keys[3]);
-        System.out.println("Finding key:");
-        System.out.println(keys[9]);
-        assert rbt.find(keys[9]);
-        assert !rbt.find(-3);
+            System.out.print("..  Key Found! ");
+            System.out.println(rbt.find(keys[i]));
+            assert Integer.parseInt(rbt.find(keys[i])) == keys[i];
+        }
+        assert rbt.find(-3) == null;
+        System.out.println();
 
-        for (int i = 0; i < 10; i++) {
+        //test delete functionality
+        System.out.println("Testing Delete");
+        for (int i = 0; i < TEST_CASE_SIZE; i++) {
             System.out.println(String.format("%2d Delete: %3d(%s)", i+1, keys[i], rbt.remove(keys[i])));
-            if ((i + 1) % 5 == 0) {
-                System.out.println(rbt);
-            } // if ((i + 1) % 5 == 0)
+            System.out.println(rbt);
+//            if ((i + 1) % 5 == 0) {
+//                System.out.println(rbt);
+//            } // if ((i + 1) % 5 == 0)
         } // for (int i = 0; i < 10; i++)
     }
 
