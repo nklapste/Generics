@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class GenericRedBlackTreeTest {
     private GenericRedBlackTree<Integer, String> rbt;
-    private int TEST_CASE_SIZE = 3;
+    private int TEST_CASE_SIZE = 10;
     private int[] keys = new int[TEST_CASE_SIZE];
 
     @Before public void setUp() {

@@ -313,12 +313,20 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param node
      */
     public V removeNode(Node node){
+        Node parent = null;
+        boolean leftChild = false;
+        //get parent of node beforehand
+        if (node.parent != null && node != root){
+            parent = node.parent;
+            leftChild = node.isLeftChild();
+
+        }
 
         if ((node.lChild != null && node.lChild.key != null) && (node.rChild != null && node.rChild.key != null)) {
             Node larger = getLeftMostNode(node.rChild);
 
             // larger needs one null child
-            assert (larger.lChild == null && larger.lChild.key == null) || (larger.rChild == null && larger.rChild.key == null);
+            assert (larger.lChild.key == null) || (larger.rChild.key == null);
 
             //swap node with larger
             node = larger;
@@ -333,18 +341,24 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         }
 
         // if node is is not root
-        if (node.parent != null){
+        if (parent != null && node != root){
             //link child to parent
-            child.parent = node.parent;
+//            child.parent = node.parent;
+            child.parent = parent;
 
-            if(node.isLeftChild()){ //TODO check
-                node.parent.lChild = child;
+//            if(node.isLeftChild()){ //TODO check
+//                node.parent.lChild = child;
+//            } else {
+//                node.parent.rChild = child;
+//            }
+            if(leftChild){ //TODO check
+                parent.lChild = child;
             } else {
-                node.parent.rChild = child;
+                parent.rChild = child;
             }
             // else set child to root
         } else if(child == null || child.key == null){
-            root = null;
+            root = null; //TODO IS THIS THE PROPER WAY?
         } else {
             root = child;
         }
@@ -425,11 +439,25 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @param args      {@code String[]} Command line arguments
      */
     public static void main(String[] args) {
+
+//        this fails
+//        1 Insert: 74
+//        2 Insert: 15
+//        3 Insert: 100
+
+
         GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
         int TEST_CASE_SIZE = 3;
         int[] keys = new int[TEST_CASE_SIZE];
+//        for (int i = 0; i < TEST_CASE_SIZE; i++) {
+//            keys[i] = (int) (Math.random() * 200);
+//            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
+//            rbt.insert(keys[i], "\"" + keys[i] + "\"");
+//        } // for (int i = 0; i < 10; i++)
+
+        // TODO SPECIFIC FAIL TEST
+        keys = new int[]{74, 15, 100};
         for (int i = 0; i < TEST_CASE_SIZE; i++) {
-            keys[i] = (int) (Math.random() * 200);
             System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
             rbt.insert(keys[i], "\"" + keys[i] + "\"");
         } // for (int i = 0; i < 10; i++)
