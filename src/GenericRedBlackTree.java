@@ -22,20 +22,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
     private Node root = null;
 
     /**
-     * @return
-     */
-    public Node getRoot(){
-        return root;
-    }
-
-    /**
      * Size of the tree
      */
     private int size = 0;
 
-    //TODO MAKE RETURN VALUE
     /**
-     * Recursively search the tree to find if the node is contained
+     * Recursively search the tree to find if a key is contained within RBT
+     * and return the key's node if key is found or null if key not found
      *
      * @param key {@code int} the Key to be found
      * @return {@code Node}
@@ -60,14 +53,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         }
     }
 
-    //TODO MAKE RETURN VALUE
     /**
      * Search for the node by key, and return the corresponding value
      * @param key       {@code K} the key for searching
      * @return          {@code V} the value of the node, or {@code NULL} if not found
      */
     public V find(K key) {
-        // TODO: Lab 4 Part 3-1 -- find an element from the tree
+        // Lab 4 Part 3-1 -- find an element from the tree
         Node node = getNode(root, key);
         if (node == null){
             return null;
@@ -378,7 +370,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      */
     public V remove(K key) {
         // TODO: Lab 4 Part 3-3 -- remove an element from the tree
-
         //validate that key is present in tree
         Node node = getNode(root, key);
         if(node != null){
@@ -424,7 +415,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
      * @return          {@code String} Printed format of the tree
      */
     @Override public String toString() {
-        // TODO: Lab 4 Part 3-4 -- print the tree, where each node contains both value and color
+        // Lab 4 Part 3-4 -- print the tree, where each node contains both value and color
         // You can print it by in-order traversal
         return toStringRecursive(root);
     }

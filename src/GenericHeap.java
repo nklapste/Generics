@@ -50,7 +50,7 @@ public class GenericHeap<K extends Comparable<K>, V> extends PriorityQueue<Entry
      * @param value     {@code V} the actual value of the new element
      */
     public void insert(K key, V value) {
-        // TODO: Lab 4 Part 2-1 -- GenericHeap, add new element
+        // Lab 4 Part 2-1 -- GenericHeap, add new element
         this.add(new Entry<>(key, value));
 
     }
@@ -61,7 +61,7 @@ public class GenericHeap<K extends Comparable<K>, V> extends PriorityQueue<Entry
      * @return          {@code <E extends Comparable<E>>[]} the sorted array
      */
     public static <E extends Comparable<E>> E[] heapSort(E[] array) {
-        // TODO: Lab 4 Part 2-4 -- GenericHeap, return a sorted array
+        // Lab 4 Part 2-4 -- GenericHeap, return a sorted array
 
         GenericHeap<E, E> heap = new GenericHeap<>();
 

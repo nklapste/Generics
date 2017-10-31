@@ -22,13 +22,12 @@ public class GenericStack<T> extends Vector<T> {
      * @return {@code T} the top element
      */
     public T peek() {
-        // TODO: Lab 4 Part 1-1 -- GenericStack, finish the peek method
+        // Lab 4 Part 1-1 -- GenericStack, finish the peek method
         // if the stack is empty do nothing
         if (this.isEmpty()) {
             return null;
             // query first element of stack
         } else {
-            //TODO query first element of stack
             return this.get(this.size() - 1);
         }
     }
@@ -39,7 +38,7 @@ public class GenericStack<T> extends Vector<T> {
      * @param value {@code T} the new element
      */
     public void push(T value) {
-        // TODO: Lab 4 Part 1-2 -- GenericStack, finish the push method
+        // Lab 4 Part 1-2 -- GenericStack, finish the push method
         this.add(value);
     }
 
@@ -49,7 +48,7 @@ public class GenericStack<T> extends Vector<T> {
      * @return {@code T} the removed element
      */
     public T pop() {
-        // TODO: Lab 4 Part 1-3 -- GenericStack, finish the pop method
+        // Lab 4 Part 1-3 -- GenericStack, finish the pop method
         // if the stack is empty do nothing
         if (this.isEmpty()) {
             return null;
@@ -64,7 +63,7 @@ public class GenericStack<T> extends Vector<T> {
      * @return {@code int} size of the element
      */
     public int size() {
-        // TODO: Lab 4 Part 1-4 -- GenericStack, finish the size method
+        // Lab 4 Part 1-4 -- GenericStack, finish the size method
         int count = 0;
         for (T element : this) {
             count++;
@@ -78,7 +77,7 @@ public class GenericStack<T> extends Vector<T> {
      * @return {@code boolean} {@code true} for empty; {@code false} for not
      */
     public boolean isEmpty() {
-        // TODO: Lab 4 Part 1-5 -- GenericStack, finish the isEmpty method
+        // Lab 4 Part 1-5 -- GenericStack, finish the isEmpty method
         return this.size() == 0;
     }
 
@@ -89,7 +88,7 @@ public class GenericStack<T> extends Vector<T> {
      * @return {@code Double} the value of the expression
      */
     public static Double calcPostfixExpression(String exp) {
-        // TODO: Lab 4 Part 1-6 -- GenericStack, calculate postfix expression
+        // Lab 4 Part 1-6 -- GenericStack, calculate postfix expression
         // init GenericStack of Doubles to be the calcStack to operate on
         GenericStack<Double> calcStack = new GenericStack<Double>();
 
