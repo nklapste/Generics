@@ -1,5 +1,3 @@
-import javax.management.openmbean.InvalidKeyException;
-
 /**
  * Lab 4: Generics <br />
  * The {@code GenericRedBlackTree} class <br />
@@ -299,6 +297,11 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
     }
 
+    /**
+     * Get the "leftmost" with a Nodes subtree
+     * @param node {@code Node} Node to act as root to traverse to leftmost Node
+     * @return
+     */
     public Node getLeftMostNode(Node node){
         if (node.lChild != null && node.lChild.key != null){
             return getLeftMostNode(node.lChild);
@@ -308,17 +311,24 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
     }
 
 
-
-    public void swap(Node n1, Node n2){
+    /**
+     * Swap two Nodes (by values)
+     * @param n1 {@code Node}
+     * @param n2 {@code Node}
+     */
+    public void swapNode(Node n1, Node n2){
 
           K keyT = n1.key;
           V valueT = n1.value;
+          boolean colorT = n1.color;
 
           n1.key = n2.key;
           n1.value = n2.value;
+          n1.color = n2.color;
 
           n2.key = keyT;
           n2.value = valueT;
+          n2.color = colorT;
           n2 = n1;
 
     }
@@ -333,8 +343,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             // larger needs one null child
             assert (larger.lChild.key == null) || (larger.rChild.key == null);
 
-            //swap node with larger
-            swap(larger, node);
+            //swapNode node with larger
+            swapNode(larger, node);
             node = larger;
         }
 
