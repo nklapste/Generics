@@ -77,7 +77,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         Node grandParent = parent.parent;
 
         if (grandParent == null) {
-            root = node; //TODO assigned root to null here
+            root = node;
         } else {
             if (parent.isLeftChild())
                 grandParent.lChild = node;
@@ -328,7 +328,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
           n2.key = keyT;
           n2.value = valueT;
           n2.color = colorT;
-          n2 = n1;
+          n2 = n1; // TODO check if useless in scope
 
     }
 
@@ -397,6 +397,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         //validate that key is present in tree
         Node node = getNode(root, key);
         if(node != null){
+            // iterate size down
+            size--;
             //remove element
             return removeNode(node);
         } else {
