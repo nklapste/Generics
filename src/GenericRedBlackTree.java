@@ -319,17 +319,12 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
           K keyT = n1.key;
           V valueT = n1.value;
-          boolean colorT = n1.color;
 
           n1.key = n2.key;
           n1.value = n2.value;
-          n1.color = n2.color;
 
           n2.key = keyT;
           n2.value = valueT;
-          n2.color = colorT;
-          n2 = n1; // TODO check if useless in scope
-
     }
 
     /**
@@ -343,8 +338,11 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             assert (larger.lChild.key == null) || (larger.rChild.key == null);
 
             //swapNode node with larger
+
+            System.out.println(node);
             swapNode(larger, node);
             node = larger;
+            System.out.println(node);
         }
 
         Node child;
@@ -370,7 +368,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             root = null;
         } else {
             root = child;
-            child.parent = null; //todo: ADDED CHECK
+            child.parent = null;
         }
 
         // if nodes color is black
@@ -399,6 +397,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
         if(node != null){
             // iterate size down
             size--;
+
             //remove element
             return removeNode(node);
         } else {
@@ -459,26 +458,26 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 
         GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-
-//        int TEST_CASE_SIZE = 3;
+        int TEST_CASE_SIZE = 10;
+        int keys[] = new int[TEST_CASE_SIZE];
+        for (int i = 0; i < TEST_CASE_SIZE; i++) {
+            keys[i] = (int) (Math.random() * 200);
+            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
+            rbt.insert(keys[i], "\"" + keys[i] + "\"");
+        } // for (int i = 0; i < 10; i++)
+//
+//        // TODO SPECIFIC FAIL TEST
+////        int TEST_CASE_SIZE = 3;
+////        int[]keys = new int[]{74, 15, 100};
+//        int TEST_CASE_SIZE = 4;
+//        int[] keys = new int[]{77, 2, 74, 55};
 //        for (int i = 0; i < TEST_CASE_SIZE; i++) {
-//            keys[i] = (int) (Math.random() * 200);
 //            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
 //            rbt.insert(keys[i], "\"" + keys[i] + "\"");
 //        } // for (int i = 0; i < 10; i++)
 
-        // TODO SPECIFIC FAIL TEST
-//        int TEST_CASE_SIZE = 3;
-//        int[]keys = new int[]{74, 15, 100};
-        int TEST_CASE_SIZE = 4;
-        int[] keys = new int[]{77, 2, 74, 55};
-        for (int i = 0; i < TEST_CASE_SIZE; i++) {
-            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
-            rbt.insert(keys[i], "\"" + keys[i] + "\"");
-        } // for (int i = 0; i < 10; i++)
-
         //NOTE CHANGED TO TRUE TO FIX STATIC REFERENCE ERROR
-        assert rbt.root.color == true;
+        assert rbt.root.color;
         System.out.println(rbt.root);                   // This helps to figure out the tree structure
         System.out.println(rbt);
 
@@ -491,6 +490,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             System.out.print("..  Key Found! ");
             System.out.println(rbt.find(keys[i]));
             assert Integer.parseInt(rbt.find(keys[i])) == keys[i];
+            assert rbt.root.color;
         }
         assert rbt.find(-3) == null;
         System.out.println();
@@ -559,5 +559,4 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
             return (color == RED) ? "<" + value + "(" + key + ")>" : "[" + value + "(" + key + ")]";
         }
     }
-
 }

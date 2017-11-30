@@ -8,7 +8,7 @@ import java.util.List;
 
 public class GenericRedBlackTreeTest {
     private GenericRedBlackTree<Integer, String> rbt;
-    private int TEST_CASE_SIZE = 5;
+    private int TEST_CASE_SIZE = 7;
     private int[] keys = new int[TEST_CASE_SIZE];
 
     @Before public void setUp() {
@@ -43,6 +43,7 @@ public class GenericRedBlackTreeTest {
     @Test public void test_findAll(){
         for (int i = 0; i < TEST_CASE_SIZE; i++) {
             assertEquals(keys[i], convertValue(rbt.find(keys[i])));
+
         }
     }
 
@@ -51,10 +52,16 @@ public class GenericRedBlackTreeTest {
     }
 
     @Test public void test_removeOne(){
+        int actual_size = rbt.size();
+
         System.out.println(String.format("Removing key %d", keys[0]));
         System.out.println(String.format("Before: %s", rbt));
 
         assertEquals(keys[0], convertValue(rbt.remove(keys[0])));
+
+        // check if size went down by 1
+        actual_size--;
+        assertEquals(actual_size, rbt.size());
 
         System.out.println(String.format("After: %s", rbt));
         System.out.println();
@@ -63,6 +70,8 @@ public class GenericRedBlackTreeTest {
     @Test public void test_removeAll(){
         // ensure that we don't repeat deleting keys would raise an error!
         List<Integer> deletedKeys = new ArrayList<>();
+        int actual_size = rbt.size();
+
         for (int i = 0; i < TEST_CASE_SIZE; i++) {
             if (!deletedKeys.contains(keys[i])){
                 System.out.println(String.format("Removing key %d", keys[i]));
@@ -71,6 +80,9 @@ public class GenericRedBlackTreeTest {
                 // check if proper value has been removed
                 assertEquals(keys[i], convertValue(rbt.remove(keys[i])));
 
+                // check if size went down by 1
+                actual_size--;
+                assertEquals(actual_size, rbt.size());
                 System.out.println(String.format("After: %s", rbt));
                 System.out.println();
 
